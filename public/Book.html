@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+</head>
+
+<body class="container" onload="getRooms()">
+    <div class="row" style="background-color: black; color: white;">
+        <div class="col">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Book">Book a Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Room">Add a Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/BookingReport">Booked Rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4">
+            <form style="text-align: center; border: thin solid black; border-radius: 15px; padding: 5%;">
+                <h1>Book a Room</h1>
+                <hr>
+                <h4>Name</h4>
+                <input class="form-control" type="text" name="name" id="name" required>
+                <h4>Email</h4>
+                <input class="form-control" type="email" name="email" id="email" required>
+                <h4>Address</h4>
+                <input class="form-control" type="text" name="address" id="address" required>
+                <h4>Phone</h4>
+                <input class="form-control" type="text" name="phone" id="phone" required>
+                <h4>Check-In Date</h4>
+                <input class="form-control" type="date" name="check-in" id="check-in" required>
+                <h4>Check-Out Date</h4>
+                <input class="form-control" type="date" name="check-out" id="check-out" required>
+                <h4>Card Number</h4>
+                <input class="form-control" type="number" name="card" id="card" required>
+                <br>
+                <button type="button" class="btn btn-primary" id="add" onclick="bookRoom()">Add</button>
+            </form>
+        </div>
+        <div class="col-8">
+            <h1>Select a Room</h1>
+            <div class="input-group mb-3">
+                <select class="form-control" name="search" id="search">
+                    <option value="Standard">Standard</option>
+                    <option value="Family">Family</option>
+                    <option value="Penthouse">Penthouse</option>
+                </select>
+                <button type="button" class="btn btn-primary" onclick="searchRoom()">Search</button>
+            </div>
+            <hr>
+            <table class="table table-striped table-hover" style="text-align: center;">
+                <thead class="table-dark">
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th># of beds</th>
+                    <th>Cost per Night</th>
+                    <th>Image</th>
+                    <th>Select one</th>
+                </thead>
+                <tbody id="RData"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+        integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        async function checkForm(id) {
+            let found = false;
+            if (id == '')
+                found = true;
+            await axios.get(`/checkRoom?id=${id}`).then(response => {
+                if (response.data.length > 0)
+                    found = true;
+            });
+            return found
+        }
+
+        async function bookRoom() {
+            let date = new Date();
+            date.ge
+            let form = {
+                Name: $('#name').val(),
+                Email: $('#email').val(),
+                Address: $('#address').val(),
+                Phone: $('#phone').val(),
+                CheckIn: $('#check-in').val(),
+                CheckOut: $('#check-out').val(),
+                CardNumber: $('#card').val(),
+                RoomID: $('input[name=room]:checked').attr('id')
+            }
+            if (form.RoomID == undefined) {
+                swal({
+                    title: "Hold up!",
+                    text: "Please select a room",
+                    icon: 'warning'
+                });
+                return;
+            }
+            let bool = await checkForm(form.RoomID);
+            if (bool) {
+                swal({
+                    title: "Sorry",
+                    text: "This room has already been selected",
+                    icon: 'error'
+                });
+                return;
+            }
+            axios.post('/bookRoom', JSON.stringify(form)).then(response => {
+                swal({
+                    title: "Thank You",
+                    text: "Your booking has been completed",
+                    icon: 'success'
+                });
+                getRooms();
+            });
+        }
+
+        function searchRoom() {
+            let type = $('#search').val();
+            axios.get(`/searchRoom?type=${type}`).then(response => displayData(response.data));
+        }
+
+        function getRooms() {
+            axios.get('/getRooms').then(response => displayData(response.data));
+        }
+
+        function displayData(data) {
+            let result = '';
+            data.forEach(d => {
+                result += `<tr>
+                            <td>${d.RoomID}</td>
+                            <td>${d.Type}</td>
+                            <td>${d.Beds}</td>
+                            <td>${d.Price}</td>
+                            <td><img src="./Images/${d.Picture}" width="64px" height="64px" alt="${d.Picture}"></td>
+                            <td><input type="radio" name="room" id="${d.RoomID}"></td>
+                           </tr>`;
+            });
+            $('#RData').html(result);
+        }
+    </script>
+</body>
+
+</html>

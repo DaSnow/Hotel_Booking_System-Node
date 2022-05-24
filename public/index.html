@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+</head>
+
+<body class="container">
+    <div class="row" style="background-color: black; color: white;">
+        <div class="col">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Book">Book a Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Room">Add a Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/BookingReport">Booked Rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <h1>Insert hotel information</h1>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+        integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script>
+        async function checkForm(title) {
+            let found = false;
+            if (title == '')
+                found = true;
+            await axios.get(`/checkMovie?title=${title}`).then(response => {
+                if (response.data.length > 0)
+                    found = true;
+            });
+            return found
+        }
+
+        async function addMovie() {
+            let form = {
+                Title: $('#title').val(),
+                Director: $('#director').val(),
+                Actors: $('#actor').val(),
+                Genre: $('#genre').val(),
+                Price: parseFloat($('#price').val()),
+                Premiere: $('#premiere').is(":checked"),
+                Available: $('#available').is(":checked")
+            }
+            let bool = await checkForm(form.Title);
+            if (bool) {
+                alert("Title already used");
+                return
+            }
+            axios.post('/addMovie', JSON.stringify(form)).then(response => getMovies());
+        }
+
+        async function editMovie() {
+            let form = {
+                MovieID: $('#ID').val(),
+                Title: $('#title2').val(),
+                Director: $('#director2').val(),
+                Actors: $('#actor2').val(),
+                Genre: $('#genre2').val(),
+                Price: parseFloat($('#price2').val()),
+                Premiere: $('#premiere2').is(":checked"),
+                Available: $('#available2').is(":checked")
+            }
+            let bool = await checkForm(form.Title);
+            if (bool) {
+                alert("Title already used");
+                return
+            }
+            axios.post('/editMovie', JSON.stringify(form)).then(response => getMovies());
+        }
+
+        function deleteMovie(id) {
+            axios.get(`/deleteMovie?id=${id}`).then(response => getMovies());
+        }
+
+        function searchMovie() {
+            let title = $('#search').val();
+            axios.get(`/searchMovie?title=${title}`).then(response => displayData(response.data));
+        }
+
+        function getMovies() {
+            axios.get('/getMovies').then(response => displayData(response.data));
+        }
+
+        function displayData(data) {
+            let result = '';
+            data.forEach(d => {
+                let premiere = d.Premiere ? "YES" : "NO";
+                let available = d.Available ? "YES" : "NO";
+                result += `<tr>
+                            <td>${d.MovieID}</td>
+                            <td>${d.Title}</td>
+                            <td>${d.Director}</td>
+                            <td>${d.Actors}</td>
+                            <td>${d.Genre}</td>
+                            <td>${d.Price}</td>
+                            <td>${premiere}</td>
+                            <td>${available}</td>
+                            <td>
+                                <button class="btn btn-info" onclick='openModal(${JSON.stringify(d)})'><i class='fas fa-edit'></i></button>
+                                <button class="btn btn-danger" onclick="deleteMovie(${d.MovieID})"><i class='fas fa-trash'></i></button>
+                            </td>
+                           </tr>`;
+            });
+            $('#RData').html(result);
+        }
+
+        function openModal(d) {
+            $('#ID').val(d.MovieID);
+            $('#title2').val(d.Title);
+            $('#director2').val(d.Director);
+            $('#actor2').val(d.Actors);
+            $('#genre2').val(d.Genre);
+            $('#price2').val(d.Price);
+            $('#premiere2').prop('checked', d.Premiere ? true: false);
+            $('#available2').prop('checked', d.Available ? true : false);
+            var modal = new bootstrap.Modal($('#editModal'));
+            modal.show();
+        }
+    </script> -->
+</body>
+
+</html>

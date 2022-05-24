@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+</head>
+
+<body class="container" onload="getReservations(), getRooms()">
+    <div class="row" style="background-color: black; color: white;">
+        <div class="col">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Book">Book a Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Room">Add a Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/BookingReport">Booked Rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" style="text-align: center;">
+            <h1>Booked Rooms</h1>
+            <hr>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <th>ID</th>
+                    <th>RoomID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Card Number</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody id="RData"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" name="ID" id="ID">
+                        <h4>Name</h4>
+                        <input class="form-control" type="text" name="name2" id="name2" required>
+                        <h4>Email</h4>
+                        <input class="form-control" type="text" name="email2" id="email2" required>
+                        <h4>Address</h4>
+                        <input class="form-control" type="text" name="address2" id="address2" required>
+                        <h4>Phone</h4>
+                        <input class="form-control" type="text" name="phone2" id="phone2" required>
+                        <h4>Check-In Date</h4>
+                        <input class="form-control" type="date" name="checkin2" id="checkin2" required>
+                        <h4>Check-Out Date</h4>
+                        <input class="form-control" type="date" name="checkout2" id="checkout2" required>
+                        <h4>Card Number</h4>
+                        <input class="form-control" type="number" name="card2" id="card2" required>
+                        <h4>Room Selected</h4>
+                        <select class="form-control" name="room2" id="room2"></select>
+                        <hr>
+                        <button type="button" class="btn btn-primary" onclick="updateReservation()">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+        integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        let modal = new bootstrap.Modal($('#editModal'));
+        function getReservations() {
+            axios.get('/getReservations').then(response => displayData(response.data));
+        }
+
+        function getRooms() {
+            axios.get('/getRooms').then(response => displayRooms(response.data));
+        }
+
+        function updateReservation() {
+            let form = {
+                ReservationID: parseInt($('#ID').val()),
+                Name: $('#name2').val(),
+                Email: $('#email2').val(),
+                Address: $('#address2').val(),
+                Phone: $('#phone2').val(),
+                CheckIn: $('#checkin2').val(),
+                CheckOut: $('#checkout2').val(),
+                CardNumber: parseInt($('#card2').val()),
+                RoomID: parseInt($('#room2').val())
+            }
+            console.log(form)
+            axios.post('/updateReservation', JSON.stringify(form)).then(response => closeModal());
+        }
+
+        function closeModal() {
+            getReservations();
+            modal.hide();
+        }
+
+        function deleteRow(id) {
+            axios.get(`/deleteReservation?id=${id}`).then(response => getReservations());
+        }
+
+        function displayRooms(data) {
+            let result = '';
+            data.forEach(d => {
+                result += `<option value="${d.RoomID}">${d.RoomID}</option>`;
+            });
+            $('#room2').html(result);
+        }
+
+        function displayData(data) {
+            let result = '';
+            data.forEach(d => {
+                result += `<tr>
+                            <td>${d.ReservationID}</td>
+                            <td>${d.RoomID}</td>
+                            <td>${d.Name}</td>
+                            <td>${d.Email}</td>
+                            <td>${d.Address}</td>
+                            <td>${d.Phone}</td>
+                            <td>${d.CheckIn.split('T')[0]}</td>
+                            <td>${d.CheckOut.split('T')[0]}</td>
+                            <td>${d.CardNumber}</td>
+                            <td>
+                                <button type="button" class="btn btn-info" onclick='openModal(${JSON.stringify(d)})'><i class='fas fa-edit'></i></button>
+                                <button type="button" class="btn btn-danger" onclick="deleteRow(${d.ReservationID})"><i class='fas fa-trash'></i></button>
+                            </td>
+                           </tr>`;
+            });
+            $('#RData').html(result);
+        }
+
+        function openModal(d) {
+            $('#ID').val(d.ReservationID);
+            $('#name2').val(d.Name);
+            $('#email2').val(d.Email);
+            $('#address2').val(d.Address);
+            $('#phone2').val(d.Phone);
+            $('#checkin2').val(d.CheckIn.split('T')[0]);
+            $('#checkout2').val(d.CheckOut.split('T')[0]);
+            $('#card2').val(d.CardNumber);
+            $('#room2').val(d.RoomID);
+            modal.show();
+        }
+    </script>
+</body>
+
+</html>
