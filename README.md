@@ -29,7 +29,7 @@
   <li>On the Server tab, choose Data Import</li>
   <li>Choose 'Import from Self-Contained File'</li>
   <li>Search for the sql file on the root folder</li>
-  <li>On the default Schema to be Imported into Section, select a new schema to be imported into. Name the new schema reservation-management</li>
+  <li>On the default Schema to be Imported into Section, select a new schema to be imported into. Name the new schema 'reservation-management'</li>
   <li>Begin import</li>
 </ol>
 
